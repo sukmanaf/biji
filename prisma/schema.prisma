@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dba.db"
+}
+
+
+
+model student {
+  id             Int          @id @default(autoincrement())
+  nama           String
+  kelompok       String
+  guru           String?
+  
+  tahun_ajaran  Int
+  ta    tahun_ajaran @relation(fields: [tahun_ajaran], references: [id])
+  ki karya[]
+  anekdot anekdot[]
+  foto_berseri foto_berseri[]
+}
+
+model tahun_ajaran {
+  id            Int      @id @default(autoincrement())
+  tahun_ajaran   String
+  siswa         student[]  
+}
+
+model karya {
+  id            Int      @id @default(autoincrement())
+  siswa_id      Int
+  tanggal       DateTime
+  a_agama       String
+  semester      Int
+  a_jati_diri      String
+  a_literasi      String
+  path_foto      String
+  siswa    student @relation(fields: [siswa_id], references: [id])
+}
+
+model anekdot {
+  id            Int      @id @default(autoincrement())
+  siswa_id      Int
+  semester      Int
+  id_bulan         Int
+  tahun         Int
+  tempat        String
+  tanggal       DateTime?
+  keterangan    String
+  a_agama       String
+  a_jati_diri   String
+  a_literasi    String
+  umpan_balik   String
+
+  siswa    student @relation(fields: [siswa_id], references: [id])
+  bulan    bulan @relation(fields: [id_bulan], references: [id])
+}
+
+
+model bulan{
+  id            Int      @id @default(autoincrement())
+  bulan         Int
+  nama_bulan      String
+
+  anekdot anekdot[]
+}
+
+model foto_berseri{
+  id            Int      @id @default(autoincrement())
+  siswa_id      Int
+  minggu_ke     Int
+  semester      Int @default(1)
+  a_agama       String
+  a_jati_diri   String
+  a_literasi    String
+  siswa    student @relation(fields: [siswa_id], references: [id])
+
+  foto_berseri_file foto_berseri_file[] 
+}
+
+model foto_berseri_file{
+  id                   Int      @id @default(autoincrement())
+  keterangan           String
+  file_path            String
+  foto_ke              Int?
+  foto_berseri_id      Int
+  foto_berseri         foto_berseri        @relation(fields: [foto_berseri_id], references: [id], onDelete: Cascade)  // Corrected onDelete placement
+}

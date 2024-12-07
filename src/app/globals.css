@@ -74,3 +74,78 @@
       @apply bg-background text-foreground;
     }
   }
+
+  /* Custom Scrollbar Styles */
+.dialog-scroll {
+  max-height: 80vh; /* Adjust as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #888 #f1f1f1; /* For Firefox */
+}
+
+.dialog-scroll::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.dialog-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+.dialog-scroll::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar */
+  border-radius: 10px; /* Round the corners of the scrollbar */
+}
+
+.dialog-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color on hover */
+}
+
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure the dialog content takes full height */
+}
+
+.dialog-body {
+  flex: 1; /* Allow body to take available space */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end; /* Align footer buttons to the right */
+  position: relative; /* Ensure it stays at the bottom */
+  padding: 10px 20px; /* Optional: Adjust padding */
+  border-top: 1px solid #eaeaea; /* Optional: Add a border */
+  background: white; /* Optional: Set background color */
+  z-index: 10; /* Ensure it appears above other content */
+}
+
+
+.form-item {
+  margin-top: 15px;
+}
+
+.form-item label {
+  font-weight: 500;
+  font-size: .875rem;
+}
+
+/* styles.css */
+fieldset {
+  padding: 16px;
+  border: 2px solid #0000000d;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  border-radius: 8px;
+}
+
+fieldset legend {
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+.toast-success {
+  @apply bg-green-500 text-white;
+}
