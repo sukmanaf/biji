@@ -4,6 +4,49 @@ import { promises as fs } from 'fs';
 import prisma from '../../../../lib/prisma'; // Pastikan path ini sesuai dengan lokasi file prisma.ts Anda
 
 
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+  try {
+    const id = parseInt(params.id, 10);
+    
+    if (isNaN(id)) {
+      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    }
+
+    // Check if the record exists before attempting to delete
+    let existingRecord = await prisma.foto_berseri.findUnique({ where: { id },include:{
+      foto_berseri_file:true,
+      siswa:true
+    } });
+
+    if (!existingRecord) {
+      return NextResponse.json({ error: 'Record not found' }, { status: 404 });
+    }
+    
+    const record = {
+                    a_agama : existingRecord.a_agama,
+                    a_jati_diri : existingRecord.a_jati_diri,
+                    a_literasi : existingRecord.a_literasi,
+                    minggu_ke : existingRecord.minggu_ke,
+                    semester : existingRecord.semester,
+                    tahun_ajaran : existingRecord.siswa.tahun_ajaran,
+                    siswa_id : String(existingRecord.siswa_id),
+                    path_foto1 : existingRecord.foto_berseri_file[0].file_path,
+                    keterangan1 : existingRecord.foto_berseri_file[0].keterangan,
+                    path_foto2 : existingRecord.foto_berseri_file[1].file_path,
+                    keterangan2 : existingRecord.foto_berseri_file[1].keterangan,
+                    path_foto3 : existingRecord.foto_berseri_file[2].file_path,
+                    keterangan3 : existingRecord.foto_berseri_file[2].keterangan,
+                  }
+
+
+
+    return NextResponse.json(record, { status: 200 });
+
+  } catch (error) {
+    console.error('Error deleting record:', error);
+    return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 });
+  }
+}
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   // try {

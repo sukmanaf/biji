@@ -15,6 +15,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 import { Chewy } from 'next/font/google';
+import HeaderPrint from "@/components/custom/headerPrint";
 
 const chewy = Chewy({
   subsets: ['latin'],
@@ -22,9 +23,8 @@ const chewy = Chewy({
 });
 
 
-interface Record {
+interface DataView {
   siswa_id: string;
-  tanggal: Date;
   a_agama: string;
   guru: string;
   semester: number;
@@ -32,9 +32,9 @@ interface Record {
   a_literasi: string;
   path_foto: string;
   kelompok : string;
-  ta : string;
+  tahun_ajaran : string;
   nama : string;
-  tanggal_text : string;
+  tanggal : string;
   logo:File
   darul_ulum:File
   bg_foto:File
@@ -45,7 +45,7 @@ interface Record {
 interface ViewDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  record: Record | null;
+  record: DataView | null;
 }
 
 export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
@@ -79,53 +79,11 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
          <PerfectScrollbar style={{ maxHeight: "80vh", overflow: "hidden" }}>
 
           <div ref={printRef}>
-            <div className="grid grid-cols-4">
-                <div className="col-span-1 flex items-end justify-end">
-                <img 
-                  src={record?.logo instanceof File ? URL.createObjectURL(record.logo) : record.logo} 
-                  alt="Foto 3" 
-                  className="max-h-32 object-contain  mt-11" 
-                  />
-                </div>
-                <div className="col-span-2 flex items-center justify-center">
-                  {record.semester === 1 ? (
-                    <img 
-                      src={record?.semester1 instanceof File ? URL.createObjectURL(record.semester1) : record.semester1} 
-                      alt="Foto Semester 1" 
-                      className="max-h-24 w-[70%] mb-10 object-contain mt-11" 
-                    />
-                  ) : (
-                    <img 
-                      src={record?.semester2 instanceof File ? URL.createObjectURL(record.semester2) : record.semester2} 
-                      alt="Foto Semester 2" 
-                      className="max-h-24 object-contain mt-11" 
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-7">
-                <div className="col-span-4 flex items-center justify-center">
-                  <img 
-                      src={record?.darul_ulum instanceof File ? URL.createObjectURL(record.darul_ulum) : record.darul_ulum} 
-                      alt="Foto Semester 2" 
-                      className="w-[80%] object-contain " 
-                    />
-                </div>
-                <div className="col-span-3 ">
-                  <div className="flex flex-col  items-center justify-center">
-                    <label className={` ${chewy.className} block text-4xl -mt-6` }>
-                      <strong>Dokumentasi </strong>
-                    </label>
-                    <label className={` ${chewy.className} block text-4xl ` }>
-                      <strong>Hasil Karya </strong>
-                    </label>
-                    <label className={` ${chewy.className} block text-3xl mt-2`}>
-                      <strong>{record.ta} </strong>
-                    </label>
-                  </div>
-                </div>
-              </div>
+          <HeaderPrint
+            record={record}
+            chewy={{ className: "font-chewy" }}
+            judul="Dokumentasi Hasil Karya"
+          />
 
             <table className="min-w-full mb-2 mt-5">
               <tbody>
@@ -134,7 +92,7 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <td style={{ width: "30%" }}>: {record.kelompok}</td>
                     <td style={{ width: "20%" }}>Tanggal</td>
                     <td style={{ width: "30%" }}>
-                      : {record.tanggal_text}
+                      : {record.tanggal}
                     </td>
                   </tr>
 
@@ -171,7 +129,7 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                   <td className="border border-gray-300 p-2"><strong>Nama</strong> <br /> {record.nama}</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 p-2"><strong>Deskripsi Foto</strong> <br /> {record.nama}</td>
+                  <td className="border border-gray-300 p-2"><strong>Deskripsi Foto</strong> <br /> {record.deskripsi_foto}</td>
                 </tr>
                 <tr>
                   <td className="border border-gray-300 p-2"><strong>Analisis Nilai Agama dan Budi Pekerti</strong> <br /> {record.a_agama}</td>

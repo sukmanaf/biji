@@ -50,7 +50,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
   } catch (error) {
     console.error('Error deleting record:', error);
-    return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to delete record',message : error.message }, { status: 500 });
   }
 }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {

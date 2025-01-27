@@ -26,6 +26,7 @@ model student {
   ki karya[]
   anekdot anekdot[]
   foto_berseri foto_berseri[]
+  ceklis_pencapaian ceklis_pencapaian[]
 }
 
 model tahun_ajaran {
@@ -43,7 +44,8 @@ model karya {
   a_jati_diri      String
   a_literasi      String
   path_foto      String
-  siswa    student @relation(fields: [siswa_id], references: [id])
+  deskripsi_foto      String?
+  siswa    student @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
 }
 
 model anekdot {
@@ -60,7 +62,7 @@ model anekdot {
   a_literasi    String
   umpan_balik   String
 
-  siswa    student @relation(fields: [siswa_id], references: [id])
+  siswa    student @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
   bulan    bulan @relation(fields: [id_bulan], references: [id])
 }
 
@@ -71,6 +73,7 @@ model bulan{
   nama_bulan      String
 
   anekdot anekdot[]
+  ceklis_pencapaian ceklis_pencapaian[]
 }
 
 model foto_berseri{
@@ -81,7 +84,7 @@ model foto_berseri{
   a_agama       String
   a_jati_diri   String
   a_literasi    String
-  siswa    student @relation(fields: [siswa_id], references: [id])
+  siswa    student @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
 
   foto_berseri_file foto_berseri_file[] 
 }
@@ -93,4 +96,27 @@ model foto_berseri_file{
   foto_ke              Int?
   foto_berseri_id      Int
   foto_berseri         foto_berseri        @relation(fields: [foto_berseri_id], references: [id], onDelete: Cascade)  // Corrected onDelete placement
+}
+
+model ceklis_pencapaian{
+  id            Int      @id @default(autoincrement())
+  siswa_id      Int       @default(1)
+  id_bulan         Int
+  semester      Int
+  tahun         Int
+
+  siswa    student @relation(fields: [siswa_id], references: [id], onDelete: Cascade)
+  bulan    bulan @relation(fields: [id_bulan], references: [id])
+  ceklis_pencapaian_detail ceklis_pencapaian_detail[]
+}
+
+model ceklis_pencapaian_detail{
+  id      Int      @id @default(autoincrement())
+  tujuan  String
+  konteks String
+  muncul  Int
+  kejadian String
+  ceklis_pencapaian_id  Int
+  ceklis_pencapaian         ceklis_pencapaian        @relation(fields: [ceklis_pencapaian_id], references: [id], onDelete: Cascade)  // Corrected onDelete placement
+
 }

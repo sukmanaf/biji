@@ -36,12 +36,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { record } from "zod";
 
-interface Record {
+interface ViewData {
   id?: number;
   siswa_id: number;
   tanggal: Date;
   a_agama: string;
-  guru: string;
   semester: number;
   a_jati_diri: string;
   a_literasi: string;
@@ -74,6 +73,21 @@ interface AddDialogProps {
   bulan: Bulan[];
 }
 
+interface FormData {
+  id?:number;
+  siswa_id      :Number;
+  semester      :Number;
+  id_bulan      :Number;
+  tahun         :Number;
+  tempat        :String;
+  tanggal       :String;
+  keterangan    :String;
+  a_agama       :String;
+  a_jati_diri   :String;
+  a_literasi    :String;
+  umpan_balik   :String;
+}
+
 
 
 export function AddDialog({
@@ -103,7 +117,6 @@ export function AddDialog({
       setValue("siswa_id", initialData.siswa_id);
       setValue("tanggal", formattedDate); // Format date
       setValue("a_agama", initialData.a_agama);
-      setValue("guru", initialData.guru);
       setValue("semester", initialData.semester || 1);
       setValue("a_jati_diri", initialData.a_jati_diri);
       setValue("a_literasi", initialData.a_literasi);
@@ -206,10 +219,6 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
               </FocusScope>
             </div>
 
-            <div className="form-item">
-              <label htmlFor="guru">Guru</label>
-              <Input id="guru" {...register("guru", { required: true })} />
-            </div>
 
             <div className="form-item">
               <label htmlFor="semester">Semester</label>

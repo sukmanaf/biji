@@ -5,6 +5,43 @@ import prisma from '../../../lib/prisma';
 import { DateTime } from 'luxon';
 import { ParseInput } from 'zod';
 
+
+// Handler POST request
+export async function GET(request: NextRequest) {
+  try {
+  
+    const records = await prisma.anekdot.findMany({
+      include:{
+        siswa:{
+          include:{
+            ta:true
+          }
+        }
+      },
+      orderBy:{
+        id:'desc'
+      }
+    });
+    const newRecords = records.map((item, index) => ({
+      id: item.id,
+      nama: item.siswa.nama,
+      tanggal: `${item.tanggal.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`,
+    }));
+
+    return NextResponse.json({ message: 'Record added successfully!', data: newRecords }, { status: 201 });
+
+  } catch (error) {
+    console.error('Error get data:', error);
+    return NextResponse.json({ error: 'Failed to add record' }, { status: 500 });
+  }
+}
+
+
 export const POST = async (req: NextRequest) => {
   try {
     const formData = await req.formData();

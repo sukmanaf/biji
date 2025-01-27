@@ -1,16 +1,31 @@
 // src/app/api/tahun-ajaran/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma'; // Pastikan path ini sesuai dengan lokasi file prisma.ts Anda
+
+
+
+// Handler POST request
 export async function GET(request: NextRequest) {
   try {
-    const records = await prisma.tahun_ajaran.findMany(); // Retrieve all records from the database
+  
+    const records = await prisma.tahun_ajaran.findMany({
+      orderBy:{
+        id:'desc'
+      }
+    });
+    const newRecords = records.map((item, index) => ({
+      id: item.id,
+      tahun_ajaran: item.tahun_ajaran,
+    }));
 
-    return NextResponse.json(records);
+    return NextResponse.json({ message: 'Record added successfully!', data: newRecords }, { status: 201 });
+
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return NextResponse.json({ error: 'Failed to fetch records' }, { status: 500 });
+    console.error('Error get data:', error);
+    return NextResponse.json({ error: 'Failed to add record' }, { status: 500 });
   }
 }
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();

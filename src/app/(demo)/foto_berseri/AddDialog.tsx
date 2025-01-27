@@ -183,8 +183,8 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
             formData.append(key, data[key]);
         }
         await onSave(formData); // Pass FormData to onSave
-        reset();
-        onClose();
+        // reset();
+        // onClose();
     } catch (error) {
         console.error("Failed to save record:", error);
     }
@@ -193,14 +193,19 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
   const selectedSiswa = parseInt(watch("siswa_id")?.toString(), 10) || undefined;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={() => {
+          setImagePreview1(null);
+          setImagePreview2(null);
+          setImagePreview3(null);
+          onClose(); 
+        }}>
       <DialogContent className="dialog-scroll max-w-5xl"> {/* Added styles here */}
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Karya Ilmiah" : "Add New Karya Ilmiah"}</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Foto Berseri" : "Add New Foto Berseri"}</DialogTitle>
           <DialogDescription>
             {isEdit
-              ? "Update the details of the karya ilmiah."
-              : "Fill in the details of the new karya ilmiah."}
+              ? "Update the details of the Foto Berseri."
+              : "Fill in the details of the new Foto Berseri."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -280,7 +285,7 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
               </div>
               <div className="form-item">
                 <label htmlFor="minggu_ke">Minggu Ke</label>
-                <Input id="minggu_ke" {...register("minggu_ke", { required: true })} />
+                <Input type="number" id="minggu_ke" {...register("minggu_ke", { required: true,valueAsNumber: true, min: 1 })} />
               </div>
             </div>
             <div>
@@ -386,7 +391,12 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
             
           <DialogFooter className=" p-3">
             <DialogClose asChild>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={() => {
+                setImagePreview1(null);
+                setImagePreview2(null);
+                setImagePreview3(null);
+                onClose(); 
+              }}>
                 Cancel
               </Button>
             </DialogClose>

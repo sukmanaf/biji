@@ -34,6 +34,8 @@ export function AddDialog({ isOpen, onClose, onSave, initialData, isEdit }: AddD
   });
 
   React.useEffect(() => {
+    console.log(initialData);
+    
     if (initialData) {
       setValue("tahun_ajaran", initialData.tahun_ajaran);
     }

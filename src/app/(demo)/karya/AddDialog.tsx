@@ -43,7 +43,8 @@ interface Record {
   semester: number;
   a_jati_diri: string;
   a_literasi: string;
-  path_foto: File; 
+  path_foto: string; 
+  deskripsi_foto: string;
 }
 
 interface Siswas {
@@ -76,30 +77,47 @@ export function AddDialog({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
-    reset()
+    reset(); // Reset form fields
     if (initialData) {
       setValue("siswa_id", initialData.siswa_id);
-      setValue("tanggal", new Date(initialData.tanggal).toISOString().split('T')[0]); // Set to YYYY-MM-DD format
+      setValue("tanggal", new Date(initialData.tanggal).toISOString().split("T")[0]); // Format YYYY-MM-DD
       setValue("a_agama", initialData.a_agama);
       setValue("semester", initialData.semester || 1);
       setValue("a_jati_diri", initialData.a_jati_diri);
       setValue("a_literasi", initialData.a_literasi);
       setValue("path_foto", initialData.path_foto);
+      setValue("deskripsi_foto", initialData.deskripsi_foto);
+  
+      if (initialData.path_foto) {
+        setImagePreview(initialData.path_foto); // Set image preview for editing
+      } else {
+        setImagePreview(null); // Reset preview if no file exists
+      }
+      console.log(imagePreview);
+      console.log('atas');
+      
     } else {
-      setValue("semester", 1);
+      setValue("semester", 1); // Set default semester
+      setImagePreview("transparent.png"); // Reset image preview for adding
+      setImagePreview(null); // Reset image preview for adding
+      console.log(imagePreview);
+      console.log('sini');
+      
     }
-  }, [initialData, setValue]);
+  }, [initialData, reset, setValue,setImagePreview]);
+  
   
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-    setFileName(file.name); // Set file name
-    setValue("path_foto", file); // Set file in form
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-  } else {
+      setFileName(file.name); // Set file name
+      setValue("path_foto", file); // Set file in form
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    } else {
+      
        setImagePreview(null); // Reset preview if no file is selected
-  }
+    }
   };
 
 const onSubmit: SubmitHandler<Record> = async (data) => {
@@ -115,6 +133,7 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
         
         await onSave(formData); // Pass FormData to onSave
         reset();
+        setImagePreview(null); // Reset preview if no file is selected
         onClose();
     } catch (error) {
         console.error("Failed to save record:", error);
@@ -122,9 +141,12 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
 };
  const selectedSemester = watch("semester")?.toString() || "1"; // Default to "1" if undefined
   const selectedSiswa = watch("siswa_id");
-
+  
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={() => {
+      setImagePreview(null);
+      onClose(); 
+    }}>
       <DialogContent className="dialog-scroll"> {/* Added styles here */}
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Karya Ilmiah" : "Add New Karya Ilmiah"}</DialogTitle>
@@ -240,27 +262,37 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
             <label htmlFor="a_literasi">Literasi</label>
             <Textarea className="h-24" id="a_literasi" {...register("a_literasi", { required: true })} />
           </div>
+          
+          <div className="form-item">
 
-          <div className="flex items-center space-x-4"> {/* Flex container */}
-            <div className="form-item">
-              <label htmlFor="path_foto">Upload Foto</label>
-              <Input type="file" accept="image/*" onChange={onFileChange} />
+            <div className="flex items-center space-x-4"> {/* Flex container */}
+              <div className="form-item">
+                <label htmlFor="path_foto">Upload Foto</label>
+                <Input type="file" accept="image/*" onChange={onFileChange} />
+              </div>
+
+              <div className="flex-shrink-0 "> {/* Prevent image from shrinking */}
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="mt-2 w-48 h-auto border border-gray-300 rounded" // Set width to 48 for better sizing
+                  />
+                )}
+              </div>
             </div>
-
-            <div className="flex-shrink-0"> {/* Prevent image from shrinking */}
-              {imagePreview && (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="mt-2 w-48 h-auto border border-gray-300 rounded" // Set width to 48 for better sizing
-                />
-              )}
+            <div className="form-item">
+              <label htmlFor="deskripsi_foto">Deskripsi Foto</label>
+              <Textarea className="h-24" id="deskripsi_foto" {...register("deskripsi_foto", { required: true })} />
             </div>
           </div>
 
           <DialogFooter className=" p-3">
             <DialogClose asChild>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={() => {
+                setImagePreview(null);
+                onClose; // Kosongkan initialData untuk mode add
+              }}>
                 Cancel
               </Button>
             </DialogClose>

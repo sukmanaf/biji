@@ -11,6 +11,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import HeaderPrint from "@/components/custom/headerPrint";
 
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -47,6 +48,21 @@ interface Record {
   bulan : [nama_bulan : string]
 }
 
+interface ViewData {
+  nama:string;
+  guru:string;
+  kelompok:string;
+  tahun_ajaran:string;
+  semester:string;
+  tanggal:string;
+  bulan:string;
+  a_agama:string;
+  a_jati_diri:string;
+  a_literasi:string;
+  tempat:string;
+  keterangan:string;
+}
+
 interface ViewDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -81,50 +97,11 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <div ref={printRef}>
-          <div className="grid grid-cols-4">
-              <div className="col-span-1 flex items-end justify-end">
-              <img 
-                src={record?.logo instanceof File ? URL.createObjectURL(record.logo) : record.logo} 
-                alt="Foto 3" 
-                className="max-h-32 object-contain  mt-11" 
-                />
-              </div>
-              <div className="col-span-2 flex items-center justify-center">
-                {record.semester === 1 ? (
-                  <img 
-                    src={record?.semester1 instanceof File ? URL.createObjectURL(record.semester1) : record.semester1} 
-                    alt="Foto Semester 1" 
-                    className="max-h-24 w-[70%] mb-10 object-contain mt-11" 
-                  />
-                ) : (
-                  <img 
-                    src={record?.semester2 instanceof File ? URL.createObjectURL(record.semester2) : record.semester2} 
-                    alt="Foto Semester 2" 
-                    className="max-h-24 object-contain mt-11" 
-                  />
-                )}
-              </div>
-            </div>
-          
-            <div className="grid grid-cols-9">
-              <div className="col-span-5 flex items-center justify-center">
-                <img 
-                    src={record?.darul_ulum instanceof File ? URL.createObjectURL(record.darul_ulum) : record.darul_ulum} 
-                    alt="Foto Semester 2" 
-                    className="w-[80%] object-contain " 
-                  />
-              </div>
-              <div className="col-span-4 ">
-                <div className="flex flex-col  items-center justify-center">
-                  <label className={` ${chewy.className} block text-5xl ` }>
-                    <strong>Catatan Anekdot </strong>
-                  </label>
-                  <label className={` ${chewy.className} block text-3xl mt-2`}>
-                    <strong>{record.ta} </strong>
-                  </label>
-                </div>
-              </div>
-            </div>
+        <HeaderPrint
+            record={record}
+            chewy={{ className: "font-chewy" }}
+            judul="Catatan Anekdot"
+          />
 
           <table className="min-w-full mb-2 mt-5">
             <tbody>
@@ -132,14 +109,14 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                   <td style={{ width: "15%" }}>Nama</td>
                   <td style={{ width: "35%" }}>: {record.nama}</td>
                   <td style={{ width: "15%" }}>Bulan</td>
-                  <td style={{ width: "35%" }}>: {record.bulan.nama_bulan}</td>
+                  <td style={{ width: "35%" }}>: {record.bulan}</td>
                 </tr>
 
               <tr>
                 <td>Kelompok </td>
                 <td>: {record.kelompok}</td>
                 <td>Guru Kelas </td>
-                <td>: {record.siswa.guru}</td>
+                <td>: {record.guru}</td>
               </tr>
             </tbody>
           </table>
@@ -151,7 +128,7 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
               </tr>
               <tr className="bg-green-300">
                   <th style={{ width: "45%" }} className="border border-gray-300 p-2 text-left">Tempat & tanggal <br/> 
-                  {`${record.tempat} ${record.tanggal_text}`}
+                  {`${record.tempat} ${record.tanggal}`}
                   </th>
                 <th style={{ width: "55%" , verticalAlign: "middle"}}className="border border-gray-300 p-2 text-left">Analisis Pencapaian  </th>
               </tr>

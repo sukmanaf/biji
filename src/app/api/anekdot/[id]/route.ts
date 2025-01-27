@@ -5,6 +5,29 @@ import prisma from '../../../../lib/prisma'; // Pastikan path ini sesuai dengan 
 import { DateTime } from 'luxon';
 
 
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+  try {
+    const id = parseInt(params.id, 10);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    }
+
+    // Check if the record exists before attempting to delete
+    const existingRecord = await prisma.anekdot.findUnique({ where: { id } });
+
+    if (!existingRecord) {
+      return NextResponse.json({ error: 'Record not found' }, { status: 404 });
+    }
+
+
+    return NextResponse.json(existingRecord, { status: 200 });
+
+  } catch (error) {
+    console.error('Error deleting record:', error);
+    return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 });
+  }
+}
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -39,7 +62,6 @@ export const PUT  = async (request: NextRequest, { params }: { params: { id: str
       const formData = await request.formData();
       const semester = formData.get('semester') as string | null;
       const tanggal = formData.get('tanggal') as string | null;
-      const guru = formData.get('guru') as string | null;
       const a_agama = formData.get('a_agama') as string | null;
       const a_jati_diri = formData.get('a_jati_diri') as string | null;
       const a_literasi = formData.get('a_literasi') as string | null;
@@ -65,7 +87,6 @@ export const PUT  = async (request: NextRequest, { params }: { params: { id: str
     const dataPost = {
         semester:parseInt(semester),
         tahun:parseInt(tahun),
-        guru:guru,
         tempat:tempat,
         keterangan:keterangan,
         a_agama:a_agama,
@@ -88,31 +109,32 @@ export const PUT  = async (request: NextRequest, { params }: { params: { id: str
 
     const records = await prisma.anekdot.findMany({
       include:{
-        siswa : {
+        siswa:{
           include:{
-              ta:true
-            }
-        },
-        bulan:true
+            ta:true
+          }
+        }
       },
-      where:{
-        siswa_id:parseInt(siswa_id)
+      orderBy:{
+        id:'desc'
       }
-    }); 
-
-    const record = records.map(item => ({
-      ...item,
+    });
+    const newRecords = records.map((item, index) => ({
+      id: item.id,
       nama: item.siswa.nama,
-      kelompok: item.siswa.kelompok,
-      ta:item.siswa.ta.tahun_ajaran,
-      tanggal: new Date(item.tanggal).toLocaleDateString()
+      tanggal: `${item.tanggal.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`,
 
     }));
   
+    return NextResponse.json({ message: 'Record added successfully!', data: newRecords[0] }, { status: 201 });
 
-    return NextResponse.json(record[0]);
   } catch (error) {
     console.error('Error updating record:', error);
-    return NextResponse.json({ error: 'Failed to update record' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update record',message : error.message }, { status: 500 });
   }
 }

@@ -1,19 +1,20 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Record = {
   id: number
-  nama: string
-  guru: string
-  kelompok: string
-  ta: string
+  nama: number
+  bulan: number
+  tahun: number
 }
 
 export const createColumns = (
-  handleEdit: (id: string,record: Record) => void,
+  handleView: (id: string) => void,
+  handleEdit: (id: string) => void,
   handleDelete: (id: string) => void
 ): ColumnDef<Record>[] => [
  {
@@ -29,16 +30,12 @@ export const createColumns = (
     header: "Nama",
   },
   {
-    accessorKey: "guru",
-    header: "Guru",
+    accessorKey: "bulan",
+    header: "Bulan",
   },
   {
-    accessorKey: "kelompok",
-    header: "Kelompok",
-  },
-  {
-    accessorKey: "tahun_ajaran",
-    header: "Tahun Ajaran",
+    accessorKey: "tahun",
+    header: "Tahun",
   },
   {
     id: "actions", // Kolom untuk tombol aksi
@@ -47,18 +44,24 @@ export const createColumns = (
       const record = row.original; // Akses data baris
       return (
         <div className="flex gap-2">
-          <button
+          <Button
+            onClick={() => handleView(record.id)}
+            className="" variant="default"
+          >
+            View
+          </Button>
+          <Button
             onClick={() => handleEdit(record.id)}
-            className="rounded bg-green-600 px-2 py-1 text-white hover:bg-green-700"
+            className="" variant="success"
           >
             Edit
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => handleDelete(record.id)}
-            className="rounded bg-red-600 px-2 py-1 text-white hover:bg-red-700"
+            className="" variant="destructive"
           >
             Delete
-          </button>
+          </Button>
         </div>
       );
     },

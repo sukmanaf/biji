@@ -16,35 +16,69 @@ import {
 import Link from "next/link";
 import { AddDialog } from "./AddDialog";
 import { toast } from "sonner"
+import { DateTime } from "luxon";
+import { ViewDialog } from "./ViewDialog";
+import { string } from "zod";
 
-interface TahunAjaran {
+interface Tahun {
   value: string;
   label: string;
 }
 
+interface Bulan {
+  value: string;
+  label: string;
+}
+
+interface Siswa {
+  value: string;
+  label: string;
+}
+
+
+
 // Fetch records from API
 async function fetchRecords(): Promise<Record[]> {
-  const response = await fetch("/api/siswa");
+  const response = await fetch("/api/pencapaian");
   if (!response.ok) {
     throw new Error("Failed to fetch records");
   }
   return response.json();
 }
 
-// Fetch tahun ajaran from API
-async function fetchTa(): Promise<TahunAjaran[]> {
-  const response = await fetch("/api/siswa/ta");
+
+async function fetchSiswa(): Promise<Siswa[]> {
+  const response = await fetch("/api/siswa");
+  if (!response.ok) {
+    throw new Error("Failed to fetch tahun ajaran");
+  }
+  return response.json();
+}
+async function fetchBulan(): Promise<Bulan[]> {
+  const response = await fetch("/api/siswa/bulan");
   if (!response.ok) {
     throw new Error("Failed to fetch tahun ajaran");
   }
   return response.json();
 }
 
+async function generateTahun(count = 3) {
+  const currentYear = DateTime.now().year; // Tahun ini
+  return Array.from({ length: count }, (_, i) => {
+    const year = currentYear - i; // Tahun sekarang dikurangi indeks
+    return { value: String(year), label: String(year) };
+  });
+}
+
 export default function Page() {
   const [data, setData] = useState<Record[]>([]);
-  const [tahunAjarans, setTahunAjarans] = useState<TahunAjaran[]>([]);
+  const [tahuns, setTahun] = useState<Tahun[]>([]);
+  const [bulans, setBulans] = useState<Bulan[]>([]);
+  const [siswas, setSiswas] = useState<Siswa[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<Record | null>(null);
+  const [editingRecord, setEditingRecord] = useState<FormData | null>(null); 
+  const [viewRecond, setViewRecord] = useState<DataView | null>(null); 
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [idEdit, setIdEdit] = useState<number | null>(null);
 
   useEffect(() => {
@@ -52,12 +86,23 @@ export default function Page() {
     fetchRecords().then(response => {
         setData(response.data); // Misalnya responsnya seperti { data: [...] }
       }).catch(console.error);
-    fetchTa().then(setTahunAjarans).catch(console.error);
+    fetchSiswa().then(response => {
+      const sis = response.data.map((item) => {
+        return {
+          value : String(item.id),
+          label : item.nama
+        }
+      })
+      setSiswas(sis)
+    }).catch(console.error);
+
+    fetchBulan().then(setBulans).catch(console.error);
+    generateTahun(3).then(setTahun).catch(console.error);
   }, []);
 
   const handleAddNewRecord = async (data: FormData) => {
     try {
-        const response = await fetch('/api/siswa', {
+        const response = await fetch('/api/pencapaian', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,7 +132,7 @@ export default function Page() {
 
   const handleEditRecord = async (data: FormData) => {
     try {
-      const response = await fetch(`/api/siswa/${idEdit}`, {
+      const response = await fetch(`/api/pencapaian/${idEdit}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +149,7 @@ export default function Page() {
       // Update data di DataTable (misalnya recordsList)
       setData((prevData) =>
         prevData.map((item) =>
-          item.id === updatedRecord.id ? { ...item, ...updatedRecord } : item
+          item.id === updatedRecord.data.id ? { ...item, ...updatedRecord.data } : item
         )
       );
 
@@ -123,7 +168,7 @@ export default function Page() {
   const handleEdit = async (id: number) => {
     try {
       setIdEdit(id)
-      const response = await fetch(`/api/siswa/${id}`);
+      const response = await fetch(`/api/pencapaian/${id}`);
       if (!response.ok) {
         throw new Error("Failed to fetch record");
       }
@@ -135,10 +180,12 @@ export default function Page() {
     }
   };
 
+  
+
   const handleDelete = async (id: number) => {
     // Hapus record berdasarkan ID
       try {
-          const response = await fetch(`/api/siswa/${id}`, {
+          const response = await fetch(`/api/pencapaian/${id}`, {
           method: 'DELETE',
           });
 
@@ -158,8 +205,22 @@ export default function Page() {
       }
   };
 
+  const handleView = async (id: number) => {
+    try {
+      setIdEdit(id)
+      const response = await fetch(`/api/pencapaian/view/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch record");
+      }
+      const record: DataView = await response.json();
+      setViewRecord(record); // Simpan data record di state
+      setIsViewDialogOpen(true); // Buka dialog
+    } catch (error) {
+      console.error("Error fetching record:", error);
+    }
+  };
 
-  const columns = createColumns(handleEdit, handleDelete);
+  const columns = createColumns(handleView,handleEdit, handleDelete);
 
   return (
     <ContentLayout title="Karya Ilmiah">
@@ -203,7 +264,15 @@ export default function Page() {
         onSave={editingRecord ? handleEditRecord : handleAddNewRecord}
         initialData={editingRecord}
         isEdit={!!editingRecord}
-        tahun_ajarans={tahunAjarans} // Oper daftar tahun ajaran ke dialog
+        tahuns={tahuns} // Oper daftar tahun ajaran ke dialog
+        bulans={bulans} // Oper daftar tahun ajaran ke dialog
+        siswas={siswas} // Oper daftar tahun ajaran ke dialog
+      />
+
+      <ViewDialog
+        isOpen={isViewDialogOpen}
+        onClose={() => setIsViewDialogOpen(false)}
+        record={viewRecond} // Pass record yang dipilih ke dialog
       />
     </ContentLayout>
   );

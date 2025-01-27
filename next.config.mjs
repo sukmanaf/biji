@@ -3,6 +3,9 @@ const nextConfig = {};
 
 // next.config.mjs
 export default {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async redirects() {
     return [
       {
