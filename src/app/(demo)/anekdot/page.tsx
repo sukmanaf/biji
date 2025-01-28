@@ -217,7 +217,7 @@ export default function Page() {
   const columns = createColumns(handleView,handleEdit, handleDelete);
 
   return (
-    <ContentLayout title="Karya Ilmiah">
+    <ContentLayout title="Catatan Anekdot">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -227,7 +227,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Karya Ilmiah</BreadcrumbPage>
+            <BreadcrumbPage>Catatan Anekdot</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
