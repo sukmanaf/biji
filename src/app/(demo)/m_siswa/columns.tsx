@@ -13,7 +13,7 @@ export type Record = {
 }
 
 export const createColumns = (
-  handleEdit: (id: string,record: Record) => void,
+  handleEdit: (id: string) => void,
   handleDelete: (id: string) => void
 ): ColumnDef<Record>[] => [
  {
@@ -48,13 +48,13 @@ export const createColumns = (
       return (
         <div className="flex gap-2">
           <button
-            onClick={() => handleEdit(record.id)}
+            onClick={() => handleEdit(String(record.id))}
             className="rounded bg-green-600 px-2 py-1 text-white hover:bg-green-700"
           >
             Edit
           </button>
           <button
-            onClick={() => handleDelete(record.id)}
+            onClick={() => handleDelete(String(record.id))}
             className="rounded bg-red-600 px-2 py-1 text-white hover:bg-red-700"
           >
             Delete
