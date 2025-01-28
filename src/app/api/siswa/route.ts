@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
       },
     })
     const newData = {
+      id:newRecord.id,
       nama:newRecord.nama,
       guru:newRecord.guru,
       kelompok:newRecord.kelompok,
@@ -68,6 +69,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Record added successfully!', data: newData }, { status: 201 });
   } catch (error) {
     console.error('Error saving data:', error);
-    return NextResponse.json({ error: 'Failed to add record' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to add record',message:error.message }, { status: 500 });
   }
 }

@@ -48,13 +48,13 @@ export const createColumns = (
       return (
         <div className="flex gap-2">
           <button
-            onClick={() => handleEdit(String(record.id))}
+            onClick={() => handleEdit(record.id)}
             className="rounded bg-green-600 px-2 py-1 text-white hover:bg-green-700"
           >
             Edit
           </button>
           <button
-            onClick={() => handleDelete(String(record.id))}
+            onClick={() => handleDelete(record.id)}
             className="rounded bg-red-600 px-2 py-1 text-white hover:bg-red-700"
           >
             Delete

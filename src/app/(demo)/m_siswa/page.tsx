@@ -33,7 +33,7 @@ async function fetchRecords(): Promise<Record[]> {
 
 // Fetch tahun ajaran from API
 async function fetchTa(): Promise<TahunAjaran[]> {
-  const response = await fetch("/api/siswa/ta");
+  const response = await fetch("/api/tahun_ajaran");
   if (!response.ok) {
     throw new Error("Failed to fetch tahun ajaran");
   }
@@ -52,7 +52,15 @@ export default function Page() {
     fetchRecords().then(response => {
         setData(response.data); // Misalnya responsnya seperti { data: [...] }
       }).catch(console.error);
-    fetchTa().then(setTahunAjarans).catch(console.error);
+    fetchTa().then(response => {
+      const ta = response.data.map((item) => {
+        return {
+          value : String(item.id),
+          label : item.tahun_ajaran
+        }
+      })
+      setTahunAjarans(ta); // Misalnya responsnya seperti { data: [...] }
+    }).catch(console.error);
   }, []);
 
   const handleAddNewRecord = async (data: FormData) => {
@@ -134,7 +142,7 @@ export default function Page() {
 
   const handleDelete = async (id: number) => {
     // Hapus record berdasarkan ID
-      try {
+        try {
           const response = await fetch(`/api/siswa/${id}`, {
           method: 'DELETE',
           });
@@ -144,6 +152,7 @@ export default function Page() {
           }
 
           setData((prevData) => prevData.filter((item) => item.id !== id));
+          
             toast.success("Sukses", {
               description: "Data Berhasil dihapus!"
             })
@@ -159,7 +168,7 @@ export default function Page() {
   const columns = createColumns(handleEdit, handleDelete);
 
   return (
-    <ContentLayout title="Karya Ilmiah">
+    <ContentLayout title="Siswa">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -169,7 +178,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Karya Ilmiah</BreadcrumbPage>
+            <BreadcrumbPage>Siswa</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

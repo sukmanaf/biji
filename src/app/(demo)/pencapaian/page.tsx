@@ -192,8 +192,9 @@ export default function Page() {
           if (!response.ok) {
           throw new Error('Failed to delete record');
           }
-
+          
           setData((prevData) => prevData.filter((item) => item.id !== id));
+          
             toast.success("Sukses", {
               description: "Data Berhasil dihapus!"
             })
