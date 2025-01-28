@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Error get data:', error);
-    return NextResponse.json({ error: 'Failed to add record' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to add record',message:error.message }, { status: 500 });
   }
 }
 
