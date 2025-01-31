@@ -10,30 +10,10 @@ import { ParseInput } from 'zod';
 export async function GET(request: NextRequest) {
   try {
   
-    const records = await prisma.anekdot.findMany({
-      include:{
-        siswa:{
-          include:{
-            ta:true
-          }
-        }
-      },
-      orderBy:{
-        id:'desc'
-      }
-    });
-    const newRecords = records.map((item, index) => ({
-      id: item.id,
-      nama: item.siswa.nama,
-      tanggal: `${item.tanggal.toLocaleDateString("id-ID", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })}`,
-    }));
+    const records = await prisma.tahun_ajaran.findMany();
+   
 
-    return NextResponse.json({ message: 'Record added successfully!', data: newRecords }, { status: 201 });
+    return NextResponse.json({ message: 'Record added successfully!', data: records }, { status: 201 });
 
   } catch (error) {
     console.error('Error get data:', error);
@@ -44,73 +24,26 @@ export async function GET(request: NextRequest) {
 
 export const POST = async (req: NextRequest) => {
   try {
-    const formData = await req.formData();
-    const semester = formData.get('semester') as string | null;
-    const tanggal = formData.get('tanggal') as string | null;
-    const guru = formData.get('guru') as string | null;
-    const a_agama = formData.get('a_agama') as string | null;
-    const a_jati_diri = formData.get('a_jati_diri') as string | null;
-    const a_literasi = formData.get('a_literasi') as string | null;
-    const siswa_id = formData.get('siswa_id') as string | null;
-    const tempat = formData.get('tempat') as string | null;
-    const keterangan = formData.get('keterangan') as string | null;
-    const umpan_balik = formData.get('umpan_balik') as string | null;
+    const data = await req.json();
 
-    const date = DateTime.fromISO(tanggal);
-    const bulan = date.month; 
-    const tahun = date.year; 
+    // Validate data if necessary
+    if (!data || typeof data.tahun_ajaran !== 'string') {
+      return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
+    }
 
-    const dataPost = {
-      semester: parseInt(semester),
-      tahun: parseInt(tahun),
-      tempat: tempat,
-      keterangan: keterangan,
-      a_agama: a_agama,
-      a_jati_diri: a_jati_diri,
-      a_literasi: a_literasi,
-      umpan_balik: umpan_balik,
-      tanggal: DateTime.fromISO(tanggal).set({ hour: 0, minute: 0, second: 0 }),
-      siswa: {
-        connect: { id: parseInt(siswa_id) },
-      },
-      bulan: {
-        connect: { id: parseInt(bulan) },
-      },
-    };
 
-    let newRecord = await prisma.anekdot.create({
-      data: dataPost,
+    
+    let newRecord = await prisma.tahun_ajaran.create({
+      data: {tahun_ajaran:data.tahun_ajaran},
     });
 
-    const records = await prisma.anekdot.findMany({
-      include: {
-        siswa: {
-          include: {
-            ta: true,
-          },
-        },
-        bulan: true,
-      },
-      where: {
-        siswa_id: parseInt(siswa_id),
-      },
+    const records = await prisma.tahun_ajaran.findMany({
+      
     });
 
-    const record = records.map((item) => ({
-      ...item,
-      nama: item.siswa.nama,
-      kelompok: item.siswa.kelompok,
-      ta: item.siswa.ta.tahun_ajaran,
-      tanggal_text: item.tanggal.toLocaleDateString("id-ID", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }),
-    }));
 
     return NextResponse.json(
-      { message: "Record added successfully!", data: record[0] },
+      { message: "Record added successfully!", data: records[0] },
       { status: 201 }
     );
   } catch (error) {
