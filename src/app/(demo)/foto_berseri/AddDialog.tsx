@@ -183,8 +183,8 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
             formData.append(key, data[key]);
         }
         await onSave(formData); // Pass FormData to onSave
-        // reset();
-        // onClose();
+        reset();
+        onClose();
     } catch (error) {
         console.error("Failed to save record:", error);
     }

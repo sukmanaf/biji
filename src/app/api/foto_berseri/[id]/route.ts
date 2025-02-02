@@ -73,6 +73,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   //   return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 });
   // }
 }
+
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const Id = parseInt(params.id, 10);
@@ -114,9 +115,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       });
 
       const uploadsDir = path.join(process.cwd(), 'public', `uploads/foto_berseri/${updateRecord.id}`);
-      const buffer = Buffer.from(await file1.arrayBuffer());
-      if (file1) {
+      if (file1 instanceof File) {
         
+        const buffer = Buffer.from(await file1.arrayBuffer());
         await fs.mkdir(uploadsDir, { recursive: true });
         const extension1 = path.extname(file1.name);
         const fileName1 = `${Date.now()}${extension1}`;
@@ -127,10 +128,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName1}`,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:1
           }
 
@@ -140,16 +141,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             keterangan : keterangan1,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:1
           }
 
         });
       }
-      if (file1) {
+      if (file2 instanceof File) {
 
         const buffer2 = Buffer.from(await file2.arrayBuffer());
         const extension2 = path.extname(file2.name);
@@ -161,10 +162,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName2}`,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:2
           }
 
@@ -174,16 +175,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             keterangan : keterangan2,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:2
           }
 
         });
       }
-      if (file3) {
+      if (file3 instanceof File) {
         
         const buffer3 = Buffer.from(await file3.arrayBuffer());
         const extension3 = path.extname(file3.name);
@@ -195,10 +196,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName3}`,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:3
           }
 
@@ -208,34 +209,15 @@ export async function PUT(request: Request, { params }: { params: { id: string }
             keterangan : keterangan3,
             foto_berseri_id:updateRecord.id,
           }
-        await prisma.foto_berseri_file.update({
+        await prisma.foto_berseri_file.updateMany({
           data: dataPost,
           where:{
-            id: updateRecord.id,
+            foto_berseri_id: updateRecord.id,
             foto_ke:3
           }
 
         });
       }
-
-      
-      const dataFile = [
-          {
-            keterangan : keterangan1,
-            file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName1}`,
-            foto_berseri_id:updateRecord.id,
-          },
-          {
-            keterangan : keterangan2,
-            file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName2}`,
-            foto_berseri_id:updateRecord.id,
-          },
-          {
-            keterangan : keterangan3,
-            file_path : `/uploads/foto_berseri/${updateRecord.id}/${fileName3}`,
-            foto_berseri_id:updateRecord.id,
-          }
-        ]
 
       const records = await prisma.foto_berseri.findMany({
         include:{
@@ -262,7 +244,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         keterangan3: item.foto_berseri_file[2]?.keterangan,
       }));
 
-    return NextResponse.json(record);
+    return NextResponse.json({ message: 'Record added successfully!', data: record[0] }, { status: 201 });
   } catch (error) {
     console.error('Error updating record:', error);
     return NextResponse.json(

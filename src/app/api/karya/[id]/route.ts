@@ -70,6 +70,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
     }
+    
 
 
     // Check if the record exists before attempting to update
@@ -93,7 +94,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       },
     });
 
-    if(file){
+    if(file && typeof file.arrayBuffer === 'function'){
 
       const buffer = Buffer.from(await file.arrayBuffer());
       const uploadsDir = path.join(process.cwd(), 'public', 'uploads/karya');
@@ -113,7 +114,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       const updatedImage = await prisma.karya.update({
         where: { id },
         data: {
-          path_foto: `uploads/karya/${fileName}`
+          path_foto: `/uploads/karya/${fileName}`
         },
       });
     }

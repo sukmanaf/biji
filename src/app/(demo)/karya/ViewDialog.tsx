@@ -16,6 +16,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 
 import { Chewy } from 'next/font/google';
 import HeaderPrint from "@/components/custom/headerPrint";
+import Image from "next/image";
 
 const chewy = Chewy({
   subsets: ['latin'],
@@ -117,10 +118,13 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                   <td className="border border-gray-300 p-2" rowSpan={6}>
                     {record.path_foto && (
                       <div className="flex justify-center items-center h-full">
-                        <img
+              
+                        <Image
                           src={record.path_foto}
                           alt="Foto Karya Ilmiah"
                           className="mt-2 w-auto h-auto border border-gray-300 rounded"
+                          width={140}
+                          height={100}
                         />
                       </div>
                     )}

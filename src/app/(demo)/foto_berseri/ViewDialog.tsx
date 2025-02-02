@@ -15,6 +15,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { Chewy } from 'next/font/google';
 import HeaderPrint from "@/components/custom/headerPrint";
+import Image from "next/image";
 
 const chewy = Chewy({
   subsets: ['latin'],
@@ -108,10 +109,12 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 1</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full ">
-                        <img 
+                        <Image 
                           src={record?.path_foto1 instanceof File ? URL.createObjectURL(record.path_foto1) : record.path_foto1} 
                           alt="Foto 1" 
                           className="max-h-36 object-contain" 
+                          width={100}
+                          height={100}
                         />
                       </div>
                     </div>
@@ -134,10 +137,12 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 2</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full">
-                        <img 
+                        <Image 
                           src={record?.path_foto2 instanceof File ? URL.createObjectURL(record.path_foto2) : record.path_foto2} 
                           alt="Foto 2" 
                           className="max-h-36  object-contain" 
+                          width={100}
+                          height={100}
                         />
                       </div>
                     </div>
@@ -159,10 +164,12 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 3</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full ">
-                        <img 
+                        <Image 
                           src={record?.path_foto3 instanceof File ? URL.createObjectURL(record.path_foto3) : record.path_foto3} 
                           alt="Foto 3" 
                           className="max-h-36  object-contain" 
+                          width={100}
+                          height={100}
                         />
                       </div>
                     </div>

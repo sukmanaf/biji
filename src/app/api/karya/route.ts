@@ -81,7 +81,7 @@ export const POST = async (req: NextRequest) => {
           siswa: {
             connect: { id: parseInt(siswa_id) }, // Hubungkan ke siswa berdasarkan siswa_id
           },
-          path_foto: `uploads/karya/${fileName}`
+          path_foto: `/uploads/karya/${fileName}`
     }
 
         await fs.writeFile(filePath, buffer);
