@@ -126,6 +126,7 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                           width={140}
                           height={100}
                         />
+                        
                       </div>
                     )}
                   </td>
