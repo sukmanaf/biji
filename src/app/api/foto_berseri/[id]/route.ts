@@ -114,7 +114,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
       });
 
-      const uploadsDir = path.join(process.cwd(), 'public', `uploads/foto_berseri/${updateRecord.id}`);
+      const uploadsDir = path.join(process.cwd(), `uploads/foto_berseri/${updateRecord.id}`);
       if (file1 instanceof File) {
         
         const buffer = Buffer.from(await file1.arrayBuffer());

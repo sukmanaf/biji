@@ -109,13 +109,14 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 1</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full ">
-                        <Image 
-                          src={record?.path_foto1 instanceof File ? URL.createObjectURL(record.path_foto1) : record.path_foto1} 
-                          alt="Foto 1" 
-                          className="max-h-36 object-contain" 
-                          width={100}
-                          height={100}
-                        />
+                      <Image
+                        src={`/api/image?namePath=${record.path_foto1}`}
+                        alt="Foto 3"
+                        className="max-h-36 object-contain"
+                        width={100}
+                        height={100}
+                        unoptimized={true} // Supaya Next.js tidak memproses gambar
+                      />
                       </div>
                     </div>
                   </>
@@ -137,13 +138,14 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 2</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full">
-                        <Image 
-                          src={record?.path_foto2 instanceof File ? URL.createObjectURL(record.path_foto2) : record.path_foto2} 
-                          alt="Foto 2" 
-                          className="max-h-36  object-contain" 
-                          width={100}
-                          height={100}
-                        />
+                      <Image
+                        src={`/api/image?namePath=${record.path_foto2}`}
+                        alt="Foto 3"
+                        className="max-h-36 object-contain"
+                        width={100}
+                        height={100}
+                        unoptimized={true} // Supaya Next.js tidak memproses gambar
+                      />
                       </div>
                     </div>
                   </>
@@ -164,13 +166,16 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                     <label><center  className={` ${chewy.className} font-bold text-sm mt-1`}>Foto 3</center></label> 
 
                       <div className="flex justify-center items-center w-full h-full ">
-                        <Image 
-                          src={record?.path_foto3 instanceof File ? URL.createObjectURL(record.path_foto3) : record.path_foto3} 
-                          alt="Foto 3" 
-                          className="max-h-36  object-contain" 
-                          width={100}
-                          height={100}
-                        />
+
+                      <Image
+                        src={`/api/image?namePath=${record.path_foto3}`}
+                        alt="Foto 3"
+                        className="max-h-36 object-contain"
+                        width={100}
+                        height={100}
+                        unoptimized={true} // Supaya Next.js tidak memproses gambar
+                      />
+
                         
                       </div>
                     </div>

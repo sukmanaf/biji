@@ -34,6 +34,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 interface Record {
   id?: number;
@@ -116,22 +117,17 @@ export function AddDialog({
       setValue("keterangan3", initialData.keterangan3);
       
       if (initialData.path_foto1 instanceof File) {
-        setImagePreview1(URL.createObjectURL(initialData.path_foto1));
-      } else if (typeof initialData.path_foto1 === "string") {
-        setImagePreview1(initialData.path_foto1);
+        setImagePreview1(`/api/image?path=${initialData.path_foto1}`);
+        
       }
 
       if (initialData.path_foto2 instanceof File) {
-        setImagePreview2(URL.createObjectURL(initialData.path_foto2));
-      } else if (typeof initialData.path_foto2 === "string") {
-        setImagePreview2(initialData.path_foto2);
+        setImagePreview2(`/api/image?path=${initialData.path_foto2}`);
       }
 
       if (initialData.path_foto3 instanceof File) {
-        setImagePreview3(URL.createObjectURL(initialData.path_foto3));
-      } else if (typeof initialData.path_foto3 === "string") {
-        setImagePreview3(initialData.path_foto3);
-      }
+        setImagePreview3(`/api/image?path=${initialData.path_foto3}`);
+      } 
       
       
     }else{
@@ -332,10 +328,13 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
               </div>
               <div>
                   {imagePreview1 && (
-                    <img
-                      src={imagePreview1}
-                      alt="Preview"
-                      className="mt-2 w-48 h-auto border border-gray-300 rounded img1" // Set width to 48 for better sizing
+                    <Image
+                    src={imagePreview1}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    unoptimized={true} // Supaya Next.js tidak memproses gambar
+                    className="mt-2 w-48 h-auto border border-gray-300 rounded img3" // Set width to 48 for better sizing
                     />
                   )}
               </div>
@@ -355,10 +354,13 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
               </div>
               <div>
                   {imagePreview2 && (
-                    <img
-                      src={imagePreview2}
-                      alt="Preview"
-                      className="mt-2 w-48 h-auto border border-gray-300 rounded img2" // Set width to 48 for better sizing
+                    <Image
+                    src={imagePreview2}
+                    alt="Preview"
+                    width={100}
+                    height={100}
+                    unoptimized={true} // Supaya Next.js tidak memproses gambar
+                    className="mt-2 w-48 h-auto border border-gray-300 rounded img3" // Set width to 48 for better sizing
                     />
                   )}
               </div>
@@ -378,9 +380,12 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
               </div>
               <div>
                   {imagePreview3 && (
-                    <img
-                      src={imagePreview3}
+                    <Image
+                      src={imagePreview2}
                       alt="Preview"
+                      width={100}
+                      height={100}
+                      unoptimized={true} // Supaya Next.js tidak memproses gambar
                       className="mt-2 w-48 h-auto border border-gray-300 rounded img3" // Set width to 48 for better sizing
                     />
                   )}

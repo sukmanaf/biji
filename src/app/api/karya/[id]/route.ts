@@ -97,7 +97,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     if(file && typeof file.arrayBuffer === 'function'){
 
       const buffer = Buffer.from(await file.arrayBuffer());
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads/karya');
+      const uploadsDir = path.join(process.cwd(),'uploads/karya');
       
       // Buat folder 'uploads' jika belum ada
       await fs.mkdir(uploadsDir, { recursive: true });

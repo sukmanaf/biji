@@ -34,6 +34,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 interface Record {
   id?: number;
@@ -89,19 +90,14 @@ export function AddDialog({
       setValue("deskripsi_foto", initialData.deskripsi_foto);
   
       if (initialData.path_foto) {
-        setImagePreview(initialData.path_foto); // Set image preview for editing
+        setImagePreview(`/api/image?path=${initialData.path_foto}`); // Gunakan API gambar
       } else {
-        setImagePreview(null); // Reset preview if no file exists
+        setImagePreview(null);
       }
-      console.log(imagePreview);
-      console.log('atas');
-      
     } else {
       setValue("semester", 1); // Set default semester
       setImagePreview("transparent.png"); // Reset image preview for adding
       setImagePreview(null); // Reset image preview for adding
-      console.log(imagePreview);
-      console.log('sini');
       
     }
   }, [initialData, reset, setValue,setImagePreview]);
@@ -273,11 +269,15 @@ const onSubmit: SubmitHandler<Record> = async (data) => {
 
               <div className="flex-shrink-0 "> {/* Prevent image from shrinking */}
                 {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="mt-2 w-48 h-auto border border-gray-300 rounded" // Set width to 48 for better sizing
-                  />
+                  <div className="relative w-48 h-48 mt-2 border border-gray-300 rounded overflow-hidden">
+                    <Image
+                      src={imagePreview}
+                      alt="Preview"
+                      layout="fill"
+                      objectFit="contain"
+                      priority
+                    />
+                  </div>
                 )}
               </div>
             </div>

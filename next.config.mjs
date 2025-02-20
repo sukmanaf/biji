@@ -15,5 +15,8 @@ export default {
       },
     ];
   },
+  images: {
+    unoptimized: true, // Biarkan Next.js membaca gambar langsung tanpa optimasi
+  },
 };
 

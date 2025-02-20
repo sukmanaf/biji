@@ -120,11 +120,12 @@ export function ViewDialog({ isOpen, onClose, record }: ViewDialogProps) {
                       <div className="flex justify-center items-center h-full">
               
                         <Image
-                          src={record.path_foto}
-                          alt="Foto Karya Ilmiah"
-                          className="mt-2 w-auto h-auto border border-gray-300 rounded"
-                          width={140}
+                          src={`/api/image?namePath=${record.path_foto}`}
+                          alt="Foto 3"
+                          className="max-h-36 object-contain"
+                          width={100}
                           height={100}
+                          unoptimized={true} // Supaya Next.js tidak memproses gambar
                         />
                         
                       </div>

@@ -70,7 +70,7 @@ export const POST = async (req: NextRequest,res) => {
       data: dataPost,
     });
     
-    const uploadsDir = path.join(process.cwd(), 'public', `uploads/foto_berseri/${newRecord.id}`);
+    const uploadsDir = path.join(process.cwd(), `uploads/foto_berseri/${newRecord.id}`);
     const buffer = Buffer.from(await file1.arrayBuffer());
     await fs.mkdir(uploadsDir, { recursive: true });
     const extension1 = path.extname(file1.name);
